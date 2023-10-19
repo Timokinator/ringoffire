@@ -29,6 +29,12 @@
 }
 
 
+.played-card {
+    right: 17.5px;
+    transform: scale(1.3) translateX(140px) translateY(-180px) rotate(15deg);
+}
+
+
 .pick-card {
     animation: pick-card-animation 1.2s ease-in-out;
     transform: scale(1.3) translateX(140px) translateY(-180px) rotate(15deg);
@@ -52,4 +58,10 @@
     100% {
         transform: scale(1.3) translateX(140px) translateY(-180px) rotate(15deg);
     }
+}
+
+
+.player-position {
+    position: absolute;
+    right: 0;
 }

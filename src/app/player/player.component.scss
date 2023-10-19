@@ -1,0 +1,22 @@
+.player {
+    width: 300px;
+    display: flex;
+    align-items: center;
+    gap: 16px; //Junus über margin-left bei span gelöst
+    background-color: orange;
+    border-radius: 50px 0 0 50px;
+
+    span {
+        font-size: 32px;
+        //margin-left: 16px;
+    }
+
+
+    img {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+        border-radius: 100%;
+    }
+
+}
