@@ -3,7 +3,7 @@
     display: flex;
     align-items: center;
     gap: 16px; //Junus über margin-left bei span gelöst
-    background-color: orange;
+    background-color: rgba(128, 128, 128, 0.9);
     border-radius: 50px 0 0 50px;
 
     span {
@@ -13,10 +13,15 @@
 
 
     img {
-        width: 100px;
-        height: 100px;
+        width: 70px;
+        height: 70px;
         object-fit: cover;
         border-radius: 100%;
     }
 
+}
+
+
+.player-active {
+    background-color: rgba(255, 166, 0, 0.9) !important;
 }
