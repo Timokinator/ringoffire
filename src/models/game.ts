@@ -7,10 +7,10 @@ export class Game {
 
     constructor() {
         for (let i = 1; i < 14; i++) {
-            this.stack.push('spades' + i)
-            this.stack.push('clubs' + i)
-            this.stack.push('diamonds' + i)
-            this.stack.push('hearts' + i)
+            this.stack.push('spades_' + i)
+            this.stack.push('clubs_' + i)
+            this.stack.push('diamonds_' + i)
+            this.stack.push('hearts_' + i)
         };
 
         shuffle(this.stack);
