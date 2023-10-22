@@ -4,13 +4,14 @@
     max-width: 100%;
     background-image: url('/assets/img/board.jpg');
     display: flex;
-    justify-content: center;
+    justify-content: space-around;
     align-items: center;
 }
 
 
 .card-stack {
     position: relative;
+    right: 80px;
 
     img {
         position: absolute;
