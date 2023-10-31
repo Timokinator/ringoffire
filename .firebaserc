@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "ringoffire-a88c6": {
+      "hosting": {
+        "ringoffire": [
+          "ringoffire-a88c6"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "ringoffire-a88c6"
+  }
+}

@@ -16,6 +16,10 @@ import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { GameInfoComponent } from './game-info/game-info.component';
 import { MatCardModule } from '@angular/material/card';
+import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
+import { getAuth, provideAuth } from '@angular/fire/auth';
+import { getFirestore, provideFirestore } from '@angular/fire/firestore';
+import { getDatabase, provideDatabase } from '@angular/fire/database';
 
 
 
@@ -41,6 +45,10 @@ import { MatCardModule } from '@angular/material/card';
     MatIconModule,
     MatDialogModule,
     BrowserAnimationsModule,
+    provideFirebaseApp(() => initializeApp({"projectId":"ringoffire-a88c6","appId":"1:598949780699:web:95a71fbb47fc6d160400fe","storageBucket":"ringoffire-a88c6.appspot.com","apiKey":"AIzaSyCXRl-uUOFfj1exzvtjK4ysIwcoTwfSMy8","authDomain":"ringoffire-a88c6.firebaseapp.com","messagingSenderId":"598949780699"})),
+    provideAuth(() => getAuth()),
+    provideFirestore(() => getFirestore()),
+    provideDatabase(() => getDatabase()),
   ],
   providers: [],
   bootstrap: [AppComponent]
