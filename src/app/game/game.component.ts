@@ -18,8 +18,14 @@ export class GameComponent implements OnInit {
   firestore: Firestore = inject(Firestore);
   unsubGames;
 
+
+
+
+
   constructor(public dialog: MatDialog) {
     this.unsubGames = this.subGamesList();
+
+
 
   }
 
@@ -33,9 +39,20 @@ export class GameComponent implements OnInit {
     return onSnapshot(q, (list) => {
       //this.normalNotes = [];
       list.forEach(element => {
-        console.log(element.data());
+        // console.log(element.data());
       });
     });
+  }
+
+
+  async saveGameToFirebase(game) {
+    await addDoc(this.getGamesRef(), game);
+  }
+
+
+
+  ngonDestroy() {
+    this.unsubGames;
   }
 
 
@@ -45,6 +62,7 @@ export class GameComponent implements OnInit {
 
   newGame() {
     this.game = new Game();
+    this.saveGameToFirebase(this.game.toJson());
   }
 
 
