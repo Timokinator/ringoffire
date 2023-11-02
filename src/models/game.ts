@@ -3,6 +3,7 @@ export class Game {
     public stack: string[] = [];
     public playedCards: string[] = [];
     public currentPlayer: number = 0;
+    public id: string = ''
 
 
     constructor() {
@@ -17,12 +18,13 @@ export class Game {
     }
 
 
-    public toJson() {
+    public toJson(routeId) {
         return {
             players: this.players,
             stack: this.stack,
             playedCards: this.playedCards,
-            currentPlayer: this.currentPlayer
+            currentPlayer: this.currentPlayer,
+            id: routeId
         }
     }
 

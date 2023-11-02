@@ -3,7 +3,8 @@ import { Game } from 'src/models/game';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogAddPlayerComponent } from '../dialog-add-player/dialog-add-player.component';
 import { Injectable, inject } from '@angular/core';
-import { query, orderBy, limit, where, Firestore, collection, doc, onSnapshot, addDoc, updateDoc, deleteDoc } from '@angular/fire/firestore';
+import { query, orderBy, limit, where, Firestore, collection, doc, onSnapshot, addDoc, updateDoc, deleteDoc, setDoc } from '@angular/fire/firestore';
+import { ActivatedRoute } from '@angular/router';
 
 
 @Component({
@@ -16,17 +17,29 @@ export class GameComponent implements OnInit {
   game: Game;
   currentCard: string = '';
   firestore: Firestore = inject(Firestore);
+
+  private activatedRoute = inject(ActivatedRoute);
+  testId = this.activatedRoute.snapshot.params['game/:id'];
+
   unsubGames;
+  unsubSingleGame;
+  routeId;
+  allGameIds = [];
 
 
-
-
-
-  constructor(public dialog: MatDialog) {
+  constructor(private route: ActivatedRoute, public dialog: MatDialog) {
     this.unsubGames = this.subGamesList();
+    this.routeId = this.route.params['_value']['id'];
+    //this.unsubSingleGame = 
+
+  }
 
 
 
+  setIdSingleGame(routeId) {
+    this.unsubSingleGame = onSnapshot(doc(this.getGamesRef(), routeId), (doc) => {
+      console.log("Current data: ", doc.data());
+    });
   }
 
 
@@ -37,11 +50,26 @@ export class GameComponent implements OnInit {
   subGamesList() {
     const q = query(this.getGamesRef(), limit(100));
     return onSnapshot(q, (list) => {
-      //this.normalNotes = [];
       list.forEach(element => {
-        // console.log(element.data());
+        if (!this.allGameIds.includes(element.id)) {
+          this.allGameIds.push(element.id);
+        }
+        //console.log(this.allGameIds)
       });
     });
+  }
+
+
+
+  getSingleGameRef(colId, docId) {
+    return doc(collection(this.firestore, colId), docId);
+  }
+
+  async deleteGames() {
+    for (let i = 0; i < this.allGameIds.length; i++) {
+      const element = this.allGameIds[i];
+      await deleteDoc(doc(this.getGamesRef(), element));
+    };
   }
 
 
@@ -49,20 +77,23 @@ export class GameComponent implements OnInit {
     await addDoc(this.getGamesRef(), game);
   }
 
-
-
   ngonDestroy() {
     this.unsubGames;
+    this.unsubSingleGame;
   }
 
 
   ngOnInit(): void {
     this.newGame();
+    this.saveGameToFirebase(this.game.toJson(this.routeId));
+    this.setIdSingleGame(this.routeId);
+    this.game.id = this.routeId;
+    console.log(this.routeId);
+
   }
 
-  newGame() {
+  async newGame() {
     this.game = new Game();
-    this.saveGameToFirebase(this.game.toJson());
   }
 
 
@@ -77,10 +108,37 @@ export class GameComponent implements OnInit {
 
       setTimeout(() => {
         this.pickCardAnimation = false;
-        this.game.playedCards.push(this.currentCard)
+        this.game.playedCards.push(this.currentCard);
+        this.saveGame(this.game);
+
       }, 1300);
     }
+
+
   };
+
+
+  async saveGame(game) {
+    let docRef = doc(this.getGamesRef(), this.routeId);
+    await updateDoc(docRef, this.getCleanJson(game)).catch(
+      (err) => { console.log(err); }
+    ).then(
+      () => { console.log("Update") }
+    );
+  }
+
+
+  getCleanJson(game: Game): {} {
+    return {
+      players: game.players,
+      stack: game.stack,
+      playedCards: game.playedCards,
+      currentPlayer: game.currentPlayer,
+      //id: this.routeId
+    }
+  }
+
+
 
   openDialog(): void {
     const dialogRef = this.dialog.open(DialogAddPlayerComponent);
