@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { Game } from 'src/models/game';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogAddPlayerComponent } from '../dialog-add-player/dialog-add-player.component';
@@ -27,6 +27,7 @@ export class GameComponent implements OnInit {
   allGameIds = [];
 
 
+
   constructor(private route: ActivatedRoute, public dialog: MatDialog) {
     this.unsubGames = this.subGamesList();
     this.routeId = this.route.params['_value']['id'];
@@ -34,12 +35,27 @@ export class GameComponent implements OnInit {
 
   }
 
+  changeUrl() {
+    console.log('Test')
+    console.log(this.route.params)
+  }
 
 
   setIdSingleGame(routeId) {
     this.unsubSingleGame = onSnapshot(doc(this.getGamesRef(), routeId), (doc) => {
       console.log("Current data: ", doc.data());
+      this.game.currentPlayer = doc.data()['currentPlayer'];
+      this.game.players = doc.data()['players'];
+      this.game.playedCards = doc.data()['playedCards'];
+      this.game.stack = doc.data()['stack'];
+      this.setCurrentCard();
     });
+  }
+
+  setCurrentCard() {
+    if (this.game.playedCards.length > 0) {
+      this.currentCard = this.game.playedCards[this.game.playedCards.length - 1]
+    }
   }
 
 
@@ -65,6 +81,7 @@ export class GameComponent implements OnInit {
     return doc(collection(this.firestore, colId), docId);
   }
 
+
   async deleteGames() {
     for (let i = 0; i < this.allGameIds.length; i++) {
       const element = this.allGameIds[i];
@@ -85,23 +102,35 @@ export class GameComponent implements OnInit {
 
   ngOnInit(): void {
     this.newGame();
-    this.saveGameToFirebase(this.game.toJson(this.routeId));
     this.setIdSingleGame(this.routeId);
     this.game.id = this.routeId;
     console.log(this.routeId);
+    this.saveGameToFirebase(this.game.toJson(this.routeId));
 
   }
+
 
   async newGame() {
     this.game = new Game();
   }
 
 
+  startNewGame() {
+
+
+
+  }
+
+
   takeCard() {
-    if (!this.pickCardAnimation) {
+    if (!this.pickCardAnimation && this.game.players.length > 0) {
       this.currentCard = this.game.stack.pop();
       //console.log(this.currentCard);
       this.pickCardAnimation = true;
+
+      if (Number.isNaN(this.game.currentPlayer) || this.game.currentPlayer > this.game.players.length) {
+        this.game.currentPlayer = 0;
+      }
 
       this.game.currentPlayer++;
       this.game.currentPlayer = this.game.currentPlayer % this.game.players.length;
@@ -113,8 +142,6 @@ export class GameComponent implements OnInit {
 
       }, 1300);
     }
-
-
   };
 
 
