@@ -143,6 +143,8 @@ export class GameComponent implements OnInit {
         this.saveGame(this.game);
 
       }, 1300);
+    } else {
+      alert('Please add at least one player!')
     }
   };
 
