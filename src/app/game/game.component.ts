@@ -5,6 +5,7 @@ import { DialogAddPlayerComponent } from '../dialog-add-player/dialog-add-player
 import { Injectable, inject } from '@angular/core';
 import { query, orderBy, limit, where, Firestore, collection, doc, onSnapshot, addDoc, updateDoc, deleteDoc, setDoc } from '@angular/fire/firestore';
 import { ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -28,16 +29,11 @@ export class GameComponent implements OnInit {
 
 
 
-  constructor(private route: ActivatedRoute, public dialog: MatDialog) {
+  constructor(private route: ActivatedRoute, public dialog: MatDialog, private router: Router) {
     this.unsubGames = this.subGamesList();
     this.routeId = this.route.params['_value']['id'];
     //this.unsubSingleGame = 
 
-  }
-
-  changeUrl() {
-    console.log('Test')
-    console.log(this.route.params)
   }
 
 
@@ -52,6 +48,7 @@ export class GameComponent implements OnInit {
     });
   }
 
+
   setCurrentCard() {
     if (this.game.playedCards.length > 0) {
       this.currentCard = this.game.playedCards[this.game.playedCards.length - 1]
@@ -62,6 +59,7 @@ export class GameComponent implements OnInit {
   getGamesRef() {
     return collection(this.firestore, 'games');
   }
+
 
   subGamesList() {
     const q = query(this.getGamesRef(), limit(100));
@@ -76,25 +74,29 @@ export class GameComponent implements OnInit {
   }
 
 
-
   getSingleGameRef(colId, docId) {
     return doc(collection(this.firestore, colId), docId);
   }
 
 
   async deleteGames() {
-    for (let i = 0; i < this.allGameIds.length; i++) {
-      const element = this.allGameIds[i];
-      await deleteDoc(doc(this.getGamesRef(), element));
-    };
+    let message = prompt("Enter password for delete all games:")
+
+    if (message == "12345") {
+      for (let i = 0; i < this.allGameIds.length; i++) {
+        const element = this.allGameIds[i];
+        await deleteDoc(doc(this.getGamesRef(), element));
+      };
+      this.startNewGame();
+    }
   }
 
 
- /*  async saveGameToFirebase(game) {
-    await addDoc(this.getGamesRef(), game).then(docRef => {
-      console.log("Document written with ID: ", docRef.id);
-    })
-  } */
+  /*  async saveGameToFirebase(game) {
+     await addDoc(this.getGamesRef(), game).then(docRef => {
+       console.log("Document written with ID: ", docRef.id);
+     })
+   } */
 
   ngonDestroy() {
     this.unsubGames;
@@ -108,6 +110,7 @@ export class GameComponent implements OnInit {
     this.game.id = this.routeId;
     console.log(this.routeId);
     //this.saveGameToFirebase(this.game.toJson(this.routeId));
+    this.saveGame(this.game);
 
   }
 
@@ -117,9 +120,17 @@ export class GameComponent implements OnInit {
   }
 
 
-  startNewGame() {
+  async startNewGame() {
     console.log('new game')
+    this.game = new Game;
+    await addDoc(collection(this.firestore, 'games'), this.game.toJson('')).then(docRef => {
+      console.log("Document written with ID: ", docRef.id);
+      this.routeId = docRef.id;
+    })
+    this.router.navigateByUrl(`/game/${this.routeId}`);
+    this.ngOnInit()
 
+    //this.setIdSingleGame(this.routeId);
 
   }
 
@@ -163,7 +174,7 @@ export class GameComponent implements OnInit {
       stack: game.stack,
       playedCards: game.playedCards,
       currentPlayer: game.currentPlayer,
-      //id: this.routeId
+      id: this.routeId
     }
   }
 
@@ -175,6 +186,7 @@ export class GameComponent implements OnInit {
     dialogRef.afterClosed().subscribe((name: string) => {
       if (name) {
         this.game.players.push(name);
+        this.saveGame(this.game);
       }
     });
   }
