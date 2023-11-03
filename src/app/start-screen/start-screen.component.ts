@@ -20,15 +20,12 @@ export class StartScreenComponent {
   constructor(private router: Router) { }
 
   async newGame() {
-    //Start Game
     this.game = new Game;
     await addDoc(collection(this.firestore, 'games'), this.game.toJson('')).then(docRef => {
       console.log("Document written with ID: ", docRef.id);
       this.newUrl = docRef.id;
     })
-
     this.router.navigateByUrl(`/game/${this.newUrl}`);
-
   }
 
 

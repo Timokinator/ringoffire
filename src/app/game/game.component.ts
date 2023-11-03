@@ -32,7 +32,6 @@ export class GameComponent implements OnInit {
   constructor(private route: ActivatedRoute, public dialog: MatDialog, private router: Router) {
     this.unsubGames = this.subGamesList();
     this.routeId = this.route.params['_value']['id'];
-    //this.unsubSingleGame = 
 
   }
 
@@ -92,12 +91,6 @@ export class GameComponent implements OnInit {
   }
 
 
-  /*  async saveGameToFirebase(game) {
-     await addDoc(this.getGamesRef(), game).then(docRef => {
-       console.log("Document written with ID: ", docRef.id);
-     })
-   } */
-
   ngonDestroy() {
     this.unsubGames;
     this.unsubSingleGame;
@@ -109,7 +102,6 @@ export class GameComponent implements OnInit {
     this.setIdSingleGame(this.routeId);
     this.game.id = this.routeId;
     console.log(this.routeId);
-    //this.saveGameToFirebase(this.game.toJson(this.routeId));
     this.saveGame(this.game);
 
   }
@@ -128,9 +120,7 @@ export class GameComponent implements OnInit {
       this.routeId = docRef.id;
     })
     this.router.navigateByUrl(`/game/${this.routeId}`);
-    this.ngOnInit()
-
-    //this.setIdSingleGame(this.routeId);
+    this.ngOnInit();
 
   }
 
@@ -138,7 +128,6 @@ export class GameComponent implements OnInit {
   takeCard() {
     if (!this.pickCardAnimation && this.game.players.length > 0) {
       this.currentCard = this.game.stack.pop();
-      //console.log(this.currentCard);
       this.pickCardAnimation = true;
 
       if (Number.isNaN(this.game.currentPlayer) || this.game.currentPlayer > this.game.players.length) {
