@@ -90,9 +90,11 @@ export class GameComponent implements OnInit {
   }
 
 
-  async saveGameToFirebase(game) {
-    await addDoc(this.getGamesRef(), game);
-  }
+ /*  async saveGameToFirebase(game) {
+    await addDoc(this.getGamesRef(), game).then(docRef => {
+      console.log("Document written with ID: ", docRef.id);
+    })
+  } */
 
   ngonDestroy() {
     this.unsubGames;
@@ -105,7 +107,7 @@ export class GameComponent implements OnInit {
     this.setIdSingleGame(this.routeId);
     this.game.id = this.routeId;
     console.log(this.routeId);
-    this.saveGameToFirebase(this.game.toJson(this.routeId));
+    //this.saveGameToFirebase(this.game.toJson(this.routeId));
 
   }
 
@@ -116,7 +118,7 @@ export class GameComponent implements OnInit {
 
 
   startNewGame() {
-
+    console.log('new game')
 
 
   }
