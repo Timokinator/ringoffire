@@ -4,6 +4,8 @@ export class Game {
     public playedCards: string[] = [];
     public currentPlayer: number = 0;
     public id: string = ''
+    public pickCardAnimation = false;
+    public currentCard: string = '';
 
 
     constructor() {
@@ -24,7 +26,9 @@ export class Game {
             stack: this.stack,
             playedCards: this.playedCards,
             currentPlayer: this.currentPlayer,
-            id: routeId
+            id: routeId,
+            pickCardAnimation: this.pickCardAnimation,
+            currentCard: this.currentCard
         }
     }
 
