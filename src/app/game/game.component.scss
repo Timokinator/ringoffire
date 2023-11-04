@@ -3,6 +3,9 @@
     height: 100vh;
     max-width: 100%;
     background-image: url('../../assets/img/board.jpg');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -17,7 +20,20 @@
         position: absolute;
         width: 120px;
         height: auto;
+
+        @media (max-width: 600px) {
+            width: 90px;
+        }
+
+
     }
+
+
+    @media (max-width: 600px) {
+        right: 5px;
+    }
+
+
 }
 
 .top-card {
@@ -33,12 +49,24 @@
 .played-card {
     right: 17.5px;
     transform: scale(1.3) translateX(140px) translateY(-180px) rotate(15deg);
+
+    @media (max-width: 600px) {
+        right: 17.5px;
+        transform: scale(1.3) translateX(110px) translateY(-80px) rotate(15deg);
+    }
+
+
 }
 
 
 .pick-card {
     animation: pick-card-animation 1.2s ease-in-out;
     transform: scale(1.3) translateX(140px) translateY(-180px) rotate(15deg);
+
+    @media (max-width: 600px) {
+        animation: pick-card-animation-mobile 1.2s ease-in-out;
+        transform: scale(1.3) translateX(110px) translateY(-80px) rotate(15deg);
+    }
 
 }
 
@@ -62,10 +90,47 @@
 }
 
 
+@keyframes pick-card-animation-mobile {
+    0% {
+        transform: scale(1);
+    }
+
+    40% {
+        transform: scale(1.5);
+    }
+
+    60% {
+        transform: scale(1.5);
+    }
+
+    100% {
+        transform: scale(1.3) translateX(110px) translateY(-80px) rotate(15deg);
+    }
+}
+
+
+
+
+
 .player-position {
     position: absolute;
     right: 0;
     z-index: 1;
+}
+
+.player-position-mobile {
+    position: absolute;
+    
+}
+
+
+.flex-wrap {
+    width: 75%;
+    position: absolute;
+    top: 32px;
+    left: 64px;
+    display: flex;
+    flex-wrap: wrap;
 }
 
 .btn-add {
@@ -94,4 +159,10 @@
     bottom: 32px;
     left: 100px;
     right: 100px;
+
+    @media (max-width: 600px) {
+        left: 16px;
+    }
+
+
 }
