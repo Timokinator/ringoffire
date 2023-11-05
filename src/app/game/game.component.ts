@@ -14,9 +14,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./game.component.scss']
 })
 export class GameComponent implements OnInit {
-
   game: Game;
- 
   firestore: Firestore = inject(Firestore);
 
   private activatedRoute = inject(ActivatedRoute);
@@ -28,12 +26,10 @@ export class GameComponent implements OnInit {
   allGameIds = [];
 
 
-
   constructor(private route: ActivatedRoute, public dialog: MatDialog, private router: Router) {
     this.unsubGames = this.subGamesList();
     this.routeId = this.route.params['_value']['id'];
-
-  }
+  };
 
 
   setIdSingleGame(routeId) {
@@ -48,19 +44,19 @@ export class GameComponent implements OnInit {
       this.game.id = doc.data()['id'];
       //this.setCurrentCard();
     });
-  }
+  };
 
 
   setCurrentCard() {
     if (this.game.playedCards.length > 0) {
       this.game.currentCard = this.game.playedCards[this.game.playedCards.length - 1]
-    }
-  }
+    };
+  };
 
 
   getGamesRef() {
     return collection(this.firestore, 'games');
-  }
+  };
 
 
   subGamesList() {
@@ -73,12 +69,12 @@ export class GameComponent implements OnInit {
         //console.log(this.allGameIds)
       });
     });
-  }
+  };
 
 
   getSingleGameRef(colId, docId) {
     return doc(collection(this.firestore, colId), docId);
-  }
+  };
 
 
   async deleteGames() {
@@ -90,14 +86,14 @@ export class GameComponent implements OnInit {
         await deleteDoc(doc(this.getGamesRef(), element));
       };
       this.startNewGame();
-    }
-  }
+    };
+  };
 
 
   ngonDestroy() {
     this.unsubGames;
     this.unsubSingleGame;
-  }
+  };
 
 
   ngOnInit(): void {
@@ -105,14 +101,12 @@ export class GameComponent implements OnInit {
     this.setIdSingleGame(this.routeId);
     this.game.id = this.routeId;
     console.log(this.routeId);
-    //this.saveGame(this.game);
-
-  }
+  };
 
 
   async newGame() {
     this.game = new Game();
-  }
+  };
 
 
   async startNewGame() {
@@ -124,33 +118,32 @@ export class GameComponent implements OnInit {
     })
     this.router.navigateByUrl(`/game/${this.routeId}`);
     this.ngOnInit();
-
-  }
+  };
 
 
   takeCard() {
-    if (!this.game.pickCardAnimation && this.game.players.length > 0) {
-      this.game.currentCard = this.game.stack.pop();
-      this.game.pickCardAnimation = true;
-      //this.saveGame(this.game);
-      
-      if (Number.isNaN(this.game.currentPlayer) || this.game.currentPlayer > this.game.players.length) {
-        this.game.currentPlayer = 0;
-      }
+    if (!this.game.pickCardAnimation) {
+      if (this.game.players.length > 0) {
+        this.game.currentCard = this.game.stack.pop();
+        this.game.pickCardAnimation = true;
 
-      this.game.currentPlayer++;
-      this.game.currentPlayer = this.game.currentPlayer % this.game.players.length;
-      this.saveGame(this.game);
+        if (Number.isNaN(this.game.currentPlayer) || this.game.currentPlayer > this.game.players.length) {
+          this.game.currentPlayer = 0;
+        };
 
-      setTimeout(() => {
-        this.game.pickCardAnimation = false;
-        this.game.playedCards.push(this.game.currentCard);
+        this.game.currentPlayer++;
+        this.game.currentPlayer = this.game.currentPlayer % this.game.players.length;
         this.saveGame(this.game);
-        //this.game.currentCard = '';
-      }, 1300);
-    } else {
-      alert('Please add at least one player!')
-    }
+
+        setTimeout(() => {
+          this.game.pickCardAnimation = false;
+          this.game.playedCards.push(this.game.currentCard);
+          this.saveGame(this.game);
+        }, 1300);
+      } else {
+        alert('Please add at least one player!')
+      };
+    };
   };
 
 
@@ -189,6 +182,15 @@ export class GameComponent implements OnInit {
     });
   }
 
+
+  editPlayer(playerId) {
+    console.log(playerId)
+
+    
+
+
+
+  }
 
 
 
