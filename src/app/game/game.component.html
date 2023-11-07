@@ -8,12 +8,12 @@
         class="player-position-mobile hide-desktop"></app-player-mobile>
 </div>
 
-<div class="container_game_over" *ngIf="!gameOver">
+<div class="container_game_over" *ngIf="gameOver">
     <img class="img_game_over" src="../../assets/img/game-over.jpg" alt="">
 </div>
 
 
-<div *ngIf="gameOver" class="field">
+<div *ngIf="!gameOver" class="field">
     <div class="card-stack">
         <!-- Card stack -->
         <img [ngStyle]="{'right.px' : i * 3.5}" *ngFor="let c of [0, 1, 2, 3]; let i = index;"
@@ -47,7 +47,7 @@
     <mat-icon>play_arrow</mat-icon>
 </button>
 
-<div class="info-start-new-game" *ngIf="!gameOver">
+<div class="info-start-new-game" *ngIf="gameOver">
     <img src="../../assets/img/arrow.png" alt="">
     <span>
         Start new game
