@@ -6,6 +6,7 @@ import { Injectable, inject } from '@angular/core';
 import { query, orderBy, limit, where, Firestore, collection, doc, onSnapshot, addDoc, updateDoc, deleteDoc, setDoc } from '@angular/fire/firestore';
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
+import { EditPlayerComponent } from '../edit-player/edit-player.component';
 
 
 @Component({
@@ -24,6 +25,7 @@ export class GameComponent implements OnInit {
   unsubSingleGame;
   routeId;
   allGameIds = [];
+  gameOver: boolean = false;
 
 
   constructor(private route: ActivatedRoute, public dialog: MatDialog, private router: Router) {
@@ -37,6 +39,7 @@ export class GameComponent implements OnInit {
       console.log("Current data: ", doc.data());
       this.game.currentPlayer = doc.data()['currentPlayer'];
       this.game.players = doc.data()['players'];
+      this.game.player_images = doc.data()['player_images'];
       this.game.playedCards = doc.data()['playedCards'];
       this.game.stack = doc.data()['stack'];
       this.game.currentCard = doc.data()['currentCard'];
@@ -122,7 +125,9 @@ export class GameComponent implements OnInit {
 
 
   takeCard() {
-    if (!this.game.pickCardAnimation) {
+    if (this.game.stack.length == 0) {
+      this.gameOver = true;
+    } else if (!this.game.pickCardAnimation) {
       if (this.game.players.length > 0) {
         this.game.currentCard = this.game.stack.pop();
         this.game.pickCardAnimation = true;
@@ -160,6 +165,7 @@ export class GameComponent implements OnInit {
   getCleanJson(game: Game): {} {
     return {
       players: game.players,
+      player_images: game.player_images,
       stack: game.stack,
       playedCards: game.playedCards,
       currentPlayer: game.currentPlayer,
@@ -177,20 +183,30 @@ export class GameComponent implements OnInit {
     dialogRef.afterClosed().subscribe((name: string) => {
       if (name) {
         this.game.players.push(name);
+        this.game.player_images.push('1');
         this.saveGame(this.game);
       }
     });
   }
 
 
-  editPlayer(playerId) {
+  editPlayer(playerId: number) {
     console.log(playerId)
 
-    
+    const dialogRef = this.dialog.open(EditPlayerComponent);
 
-
-
-  }
+    dialogRef.afterClosed().subscribe((change: string) => {
+      if (change) {
+        if (change == 'DELETE') {
+          this.game.players.splice(playerId, 1);
+          this.game.player_images.splice(playerId, 1);
+        } else {
+          this.game.player_images[playerId] = change;
+        };
+        this.saveGame(this.game);
+      };
+    });
+  };
 
 
 
